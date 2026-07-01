@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -744,3 +745,745 @@ if(sg){
 </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kauã Daudt — Full Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --surface: #0b1120;
+    --accent: #00f5d4;
+    --accent2: #7b5ea7;
+    --accent3: #f72585;
+    --text: #e8eaf0;
+    --muted: #a8b0cc;
+    --border: rgba(0,245,212,0.15);
+    --border2: rgba(0,245,212,0.06);
+    --glow: 0 0 30px rgba(0,245,212,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,245,212,0.45);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+  }
+  @media (hover: none) { .cursor, .cursor-ring { display: none; } body { cursor: auto; } }
+
+  /* Grid bg */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,212,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,212,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* Scan line */
+  @keyframes scan { 0% { top: -2px; } 100% { top: 100vh; } }
+  .scan-line {
+    position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,245,212,0.07), transparent);
+    pointer-events: none; z-index: 200;
+    animation: scan 9s linear infinite;
+  }
+
+  /* Matrix rain */
+  .matrix-rain {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; opacity: 0.32;
+  }
+  @media (max-width: 640px) { .matrix-rain { opacity: 0.2; } }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.1rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(5,8,16,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border2);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem; color: var(--accent);
+    letter-spacing: 0.15em; text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; color: var(--muted);
+    text-decoration: none; letter-spacing: 0.1em;
+    text-transform: uppercase; transition: color 0.2s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--accent); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 22px; height: 1.5px;
+    background: var(--accent); transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
+    background: rgba(5,8,16,0.97); backdrop-filter: blur(20px);
+    padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border2);
+    flex-direction: column; gap: 1.2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Space Mono', monospace; font-size: 0.8rem;
+    color: var(--muted); text-decoration: none; letter-spacing: 0.12em;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* SOCIAL SIDEBAR */
+  .social-bar {
+    position: fixed; right: 1.8rem; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 1rem; z-index: 100;
+  }
+  .social-link {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    background: rgba(11,17,32,0.8);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; transition: all 0.3s;
+    position: relative; overflow: hidden; border-radius: 2px;
+  }
+  .social-link::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--accent);
+    transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s;
+  }
+  .social-link:hover::before { transform: scaleY(1); }
+  .social-link:hover { border-color: var(--accent); box-shadow: var(--glow); }
+  .social-link:hover svg { stroke: #050810; }
+  .social-link svg {
+    width: 17px; height: 17px; position: relative; z-index: 1;
+    stroke: var(--muted); fill: none;
+    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    transition: stroke 0.3s;
+  }
+
+  /* SECTION COMMON */
+  section { position: relative; z-index: 1; }
+  .section-label {
+    font-family: 'Space Mono', monospace; font-size: 0.66rem;
+    color: var(--accent); letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; padding: 8rem 2.5rem 4rem;
+    max-width: 1100px; margin: 0 auto; position: relative;
+  }
+  .hero-tag {
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--accent); letter-spacing: 0.28em; text-transform: uppercase;
+    margin-bottom: 2rem; display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-tag::before { content: ''; width: 36px; height: 1px; background: var(--accent); }
+  .hero h1 {
+    font-size: clamp(2.8rem, 7.5vw, 6.2rem);
+    font-weight: 800; line-height: 0.95;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  @keyframes glitch {
+    0%,88%,100%{clip-path:none;transform:none}
+    90%{clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%);transform:translate(-4px,0)}
+    93%{clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%);transform:translate(4px,0)}
+    96%{clip-path:none;transform:translate(-2px,0)}
+  }
+  .name-accent { color: var(--accent); display: block; animation: glitch 7s infinite; }
+  .hero-sub {
+    font-family: 'Space Mono', monospace; font-size: 0.88rem;
+    color: var(--muted); max-width: 540px; line-height: 1.85; margin-bottom: 3rem;
+  }
+  .hero-sub span { color: var(--accent2); }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none;
+    padding: 0.85rem 1.8rem; border-radius: 2px; transition: all 0.25s;
+    display: inline-flex; align-items: center; gap: 0.5rem; cursor: none;
+  }
+  .btn-primary {
+    background: var(--accent); color: #050810;
+    font-weight: 700; border: 2px solid var(--accent);
+  }
+  .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: var(--glow); }
+  .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); box-shadow: var(--glow); }
+  .btn-download {
+    background: transparent; color: var(--text);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .btn-download:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+  .scroll-indicator {
+    position: absolute; bottom: 3rem; left: 2.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
+    animation: float 3s ease-in-out infinite;
+  }
+  .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, var(--accent), transparent); }
+
+  /* ABOUT */
+  .about { padding: 7rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: start; }
+  .about-text h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800;
+    line-height: 1.1; margin-bottom: 1.4rem; letter-spacing: -0.02em;
+  }
+  .about-text h2 em { font-style: normal; color: var(--accent); }
+  .about-text p {
+    font-family: 'Space Mono', monospace; font-size: 0.78rem;
+    color: var(--muted); line-height: 1.9; margin-bottom: 0.9rem;
+  }
+  .about-text p strong { color: var(--text); font-weight: 700; }
+
+  .certs-block { margin-top: 2rem; }
+  .certs-title {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    color: var(--accent); letter-spacing: 0.25em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .cert-item {
+    border-left: 2px solid var(--border);
+    padding: 0.55rem 0.8rem; margin-bottom: 0.5rem;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--muted); display: flex; justify-content: space-between;
+    align-items: center; gap: 1rem; transition: border-color 0.25s, color 0.25s;
+  }
+  .cert-item:hover { border-color: var(--accent); color: var(--text); }
+  .cert-item span { color: var(--accent2); font-size: 0.62rem; white-space: nowrap; flex-shrink: 0; }
+
+  /* About side info */
+  .about-side { display: flex; flex-direction: column; gap: 1.5rem; }
+  .info-card {
+    border: 1px solid var(--border2); background: var(--surface);
+    padding: 1.4rem 1.5rem; transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .info-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 2px; height: 100%; background: var(--accent);
+  }
+  .info-card:hover { border-color: rgba(0,245,212,0.35); box-shadow: var(--glow); }
+  .info-card-label {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .info-card-value { font-size: 1.1rem; font-weight: 800; color: var(--text); line-height: 1.2; }
+  .info-card-value em { font-style: normal; color: var(--accent); }
+  .info-card-sub {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    color: var(--muted); margin-top: 0.3rem;
+  }
+
+  /* SERVICES */
+  .services { padding: 7rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .service-card {
+    border: 1px solid var(--border2); background: var(--surface);
+    padding: 2rem 1.6rem; position: relative; overflow: hidden;
+    transition: all 0.35s;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px; background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { border-color: rgba(0,245,212,0.28); transform: translateY(-4px); box-shadow: var(--glow); }
+  .service-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
+  .service-title { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 0.7rem; }
+  .service-desc { font-family: 'Space Mono', monospace; font-size: 0.74rem; color: var(--muted); line-height: 1.8; }
+
+  /* SKILLS */
+  .skills { padding: 7rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem; margin-top: 3rem;
+  }
+  .skill-card {
+    border: 1px solid var(--border2); background: var(--surface);
+    padding: 1.4rem; transition: all 0.3s;
+    position: relative; overflow: hidden; cursor: default;
+  }
+  .skill-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    height: 2px; width: 0; background: var(--accent); transition: width 0.4s;
+  }
+  .skill-card:hover::after { width: 100%; }
+  .skill-card:hover { border-color: var(--border); transform: translateY(-3px); }
+  .skill-icon { font-size: 1.5rem; margin-bottom: 0.7rem; display: block; }
+  .skill-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.22rem; color: var(--text); }
+  .skill-level { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--accent); letter-spacing: 0.08em; }
+  .skill-bar { margin-top: 0.7rem; height: 2px; background: var(--border2); overflow: hidden; }
+  .skill-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1.5s cubic-bezier(0.23,1,0.32,1); width: 0;
+  }
+
+  /* PROJECTS */
+  .projects { padding: 7rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .projects-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .project-card {
+    border: 1px solid var(--border2); background: var(--surface);
+    padding: 2rem; position: relative; overflow: hidden;
+    transition: all 0.35s; text-decoration: none; display: block; cursor: none;
+  }
+  .project-card::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(0,245,212,0.04) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .project-card:hover::before { opacity: 1; }
+  .project-card:hover { border-color: rgba(0,245,212,0.28); transform: translateY(-4px); box-shadow: var(--glow); }
+  .project-badge {
+    font-family: 'Space Mono', monospace; font-size: 0.56rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.22rem 0.6rem;
+    background: rgba(0,245,212,0.07); border: 1px solid rgba(0,245,212,0.18);
+    color: var(--accent); border-radius: 1px;
+    display: inline-block; margin-bottom: 1rem;
+  }
+  .project-num {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    color: var(--accent); letter-spacing: 0.2em; margin-bottom: 0.8rem; opacity: 0.65;
+  }
+  .project-title { font-size: 1.2rem; font-weight: 800; color: var(--text); margin-bottom: 0.75rem; line-height: 1.2; }
+  .project-desc {
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    color: var(--muted); line-height: 1.85; margin-bottom: 1.4rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .tag {
+    font-family: 'Space Mono', monospace; font-size: 0.57rem;
+    letter-spacing: 0.08em; padding: 0.25rem 0.65rem;
+    border: 1px solid var(--border); color: var(--muted); border-radius: 1px;
+  }
+  .project-arrow {
+    position: absolute; top: 1.6rem; right: 1.6rem;
+    opacity: 0; transform: translate(-4px, 4px); transition: all 0.3s;
+    stroke: var(--accent); fill: none; width: 18px; height: 18px;
+    stroke-width: 1.5; stroke-linecap: round;
+  }
+  .project-card:hover .project-arrow { opacity: 1; transform: translate(0,0); }
+
+  /* CONTACT */
+  .contact { padding: 7rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .contact-inner {
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 4rem; position: relative; overflow: hidden; text-align: center;
+  }
+  .contact-inner::before {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 55%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .contact-inner h2 {
+    font-size: clamp(1.9rem, 4.5vw, 3.2rem); font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 1rem; line-height: 1.1;
+  }
+  .contact-inner h2 span { color: var(--accent); }
+  .contact-inner > p {
+    font-family: 'Space Mono', monospace; font-size: 0.78rem;
+    color: var(--muted); max-width: 400px; margin: 0 auto 2.5rem; line-height: 1.8;
+  }
+  .contact-social { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .contact-social-btn {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.85rem 1.4rem; border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    text-decoration: none; font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: all 0.3s; border-radius: 2px; cursor: none;
+  }
+  .contact-social-btn svg {
+    width: 15px; height: 15px; fill: none; stroke: currentColor;
+    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+  }
+  .contact-social-btn:hover { color: #050810; background: var(--accent); border-color: var(--accent); box-shadow: var(--glow); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border2); padding: 1.8rem 2.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 1; max-width: 1100px; margin: 0 auto;
+  }
+  footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+  footer p span { color: var(--accent); }
+
+  /* FADE UP */
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .social-bar { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 6.5rem 1.2rem 3rem; }
+    .about, .skills, .projects, .contact { padding: 4rem 1.2rem; }
+    .contact-inner { padding: 2.5rem 1.2rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem 1.2rem; }
+    .scroll-indicator { display: none; }
+    .btn { font-size: 0.68rem; padding: 0.75rem 1.4rem; }
+    .skills-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .hero-cta { flex-direction: column; align-items: flex-start; }
+    .contact-social { flex-direction: column; align-items: center; }
+    .section-label { font-size: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="matrix-rain" id="matrix-rain"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="scan-line"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">KD.DEV</a>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre</a></li>
+    <li><a href="#services">Serviços</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projetos</a></li>
+    <li><a href="#contact">Contato</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" class="mobile-link">Sobre</a>
+  <a href="#services" class="mobile-link">Serviços</a>
+  <a href="#skills" class="mobile-link">Skills</a>
+  <a href="#projects" class="mobile-link">Projetos</a>
+  <a href="#contact" class="mobile-link">Contato</a>
+</div>
+
+<!-- SOCIAL SIDEBAR -->
+<div class="social-bar">
+  <a href="https://www.linkedin.com/in/kau%C3%A3-daudt-848548345/" target="_blank" rel="noopener" class="social-link" title="LinkedIn">
+    <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+  </a>
+  <a href="https://github.com/KauaDaudt" target="_blank" rel="noopener" class="social-link" title="GitHub">
+    <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+  </a>
+  <a href="https://wa.me/5522997725541" target="_blank" rel="noopener" class="social-link" title="WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+  </a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-tag">Full Stack · Disponível para projetos &amp; novas oportunidades</div>
+  <h1>
+    <span style="color:var(--muted);font-size:0.45em;font-weight:400;letter-spacing:0.06em;display:block;margin-bottom:0.4rem;">Olá, eu sou</span>
+    <span class="name-accent">Kauã Daudt</span>
+    <span style="color:var(--text);display:block;">Full Stack</span>
+    <span style="color:var(--text);display:block;">Developer</span>
+  </h1>
+  <p class="hero-sub" style="margin-top:1.2rem;">
+    Desenvolvedor fullstack com base sólida em <span>C# e .NET</span> no back-end<br>
+    e <span>HTML, CSS e JavaScript</span> no front-end. Crio e mantenho<br>
+    sites, landing pages, sistemas web e produtos <span>SaaS</span> — do banco de dados ao deploy.
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">Ver Projetos →</a>
+    <a href="#contact" class="btn btn-outline">Entrar em Contato</a>
+    <a href="/curriculo/CURRÍCULO Kaua-Daudt-Gomes.pdf" download class="btn btn-download">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Baixar Currículo
+    </a>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label">01 — Sobre mim</div>
+  <div class="about-grid">
+    <div class="about-text fade-up">
+      <h2>Construindo soluções <em>reais</em> de ponta a ponta</h2>
+      <p>Sou um desenvolvedor <strong>fullstack</strong> com base sólida em <strong>C# e .NET</strong> no back-end e <strong>HTML, CSS e JavaScript</strong> no front-end, dedicado a construir e manter sistemas web, sites, landing pages e produtos <strong>SaaS</strong> completos.</p>
+      <p>Minha experiência inclui APIs REST com <strong>autenticação JWT</strong>, integração com bancos de dados SQL/MySQL, documentação via <strong>Swagger</strong>, e utilização de <strong>Docker</strong> para padronização de ambientes e deploy — além de manutenção e evolução de sistemas já em produção.</p>
+      <p>Atualmente cursando <strong>Análise e Desenvolvimento de Sistemas na FIAP</strong> (2026–2027), com inglês intermediário e múltiplas certificações em desenvolvimento de software.</p>
+
+      <div class="certs-block">
+        <div class="certs-title">Certificações</div>
+        <div class="cert-item">C# com Orientação a Objetos — Alura <span>2026</span></div>
+        <div class="cert-item">APIs REST com C# e LINQ — Alura <span>2026</span></div>
+        <div class="cert-item">Git e GitHub para versionamento — Alura <span>2026</span></div>
+        <div class="cert-item">Imersão Front-End com IA — Alura <span>2026</span></div>
+        <div class="cert-item">Fundamentos de Programação — FIAP / Impacta <span>2025–2026</span></div>
+      </div>
+    </div>
+
+    <div class="about-side fade-up">
+      <div class="info-card">
+        <div class="info-card-label">Formação</div>
+        <div class="info-card-value">ADS — <em>FIAP</em></div>
+        <div class="info-card-sub">2026 — 2027</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Localização</div>
+        <div class="info-card-value">Rio das Ostras, <em>RJ</em></div>
+        <div class="info-card-sub">Remoto ou Macaé/RJ</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Idiomas</div>
+        <div class="info-card-value">PT Nativo · <em>EN</em> Intermediário</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Disponibilidade</div>
+        <div class="info-card-value">Projetos & <em>Freelance</em></div>
+        <div class="info-card-sub">Sites, sistemas, manutenção & SaaS</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Contato direto</div>
+        <div class="info-card-value" style="font-size:0.9rem;">kauadtg@gmail.com</div>
+        <div class="info-card-sub">(22) 99772-5541</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-label">02 — Serviços</div>
+  <div class="services-grid">
+    <div class="service-card fade-up">
+      <span class="service-icon">🧩</span>
+      <div class="service-title">Desenvolvimento Web Fullstack</div>
+      <p class="service-desc">Sistemas sob medida, do banco de dados à interface: back-end em C#/.NET, front-end responsivo e APIs REST bem documentadas.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">🎯</span>
+      <div class="service-title">Sites & Landing Pages</div>
+      <p class="service-desc">Páginas institucionais e landing pages rápidas, responsivas e pensadas para conversão — do design ao ar.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">🛠️</span>
+      <div class="service-title">Manutenção de Sistemas</div>
+      <p class="service-desc">Correção de bugs, atualizações, otimização de performance e evolução de sistemas que já estão em produção.</p>
+    </div>
+    <div class="service-card fade-up">
+      <span class="service-icon">☁️</span>
+      <div class="service-title">SaaS & Automação</div>
+      <p class="service-desc">Aplicações sob assinatura e automações que eliminam trabalho manual repetitivo e geram histórico de dados analisável.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills" id="skills">
+  <div class="section-label">03 — Tecnologias</div>
+  <div class="skills-grid">
+    <div class="skill-card fade-up">
+      <span class="skill-icon">⚙️</span>
+      <div class="skill-name">C# / .NET</div>
+      <div class="skill-level">Stack principal</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="88"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🌐</span>
+      <div class="skill-name">ASP.NET Core</div>
+      <div class="skill-level">APIs & Web</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="84"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🎨</span>
+      <div class="skill-name">HTML / CSS3</div>
+      <div class="skill-level">Sites & Landing Pages</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">⚡</span>
+      <div class="skill-name">JavaScript</div>
+      <div class="skill-level">Front-end & interatividade</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="74"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🔐</span>
+      <div class="skill-name">JWT / Auth</div>
+      <div class="skill-level">Autenticação & autorização</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="80"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🗄️</span>
+      <div class="skill-name">SQL / MySQL</div>
+      <div class="skill-level">Banco de dados relacional</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="77"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🐋</span>
+      <div class="skill-name">Docker</div>
+      <div class="skill-level">Containerização & deploy</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="75"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">📄</span>
+      <div class="skill-name">Swagger / Scalar</div>
+      <div class="skill-level">Documentação de APIs</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="82"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🔀</span>
+      <div class="skill-name">Git / GitHub</div>
+      <div class="skill-level">Controle de versão</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="81"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🤖</span>
+      <div class="skill-name">IA Aplicada</div>
+      <div class="skill-level">Integração de LLMs</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="72"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">🐍</span>
+      <div class="skill-name">Python</div>
+      <div class="skill-level">Scripts & automação</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="65"></div></div>
+    </div>
+    <div class="skill-card fade-up">
+      <span class="skill-icon">☕</span>
+      <div class="skill-name">Java</div>
+      <div class="skill-level">Em desenvolvimento</div>
+      <div class="skill-bar"><div class="skill-bar-fill" data-width="45"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="section-label">04 — Projetos</div>
+  <div class="projects-grid">
+
+    <a href="https://github.com/KauaDaudt" target="_blank" class="project-card fade-up">
+      <svg class="project-arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      <div class="project-badge">Sistema Web Fullstack</div>
+      <div class="project-num">001</div>
+      <div class="project-title">Gestão de Manutenção de Peças de Sonda</div>
+      <p class="project-desc">Sistema web que automatiza o registro e a aprovação de solicitações de manutenção de peças de sonda, eliminando digitação manual repetitiva e criando um histórico analisável para manutenção preventiva.</p>
+      <div class="project-tags">
+        <span class="tag">C#</span>
+        <span class="tag">ASP.NET Core</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Fullstack</span>
+        <span class="tag">Manutenção Preventiva</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/KauaDaudt" target="_blank" class="project-card fade-up">
+      <svg class="project-arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      <div class="project-badge">Landing Page</div>
+      <div class="project-num">002</div>
+      <div class="project-title">Landing Page — Creche</div>
+      <p class="project-desc">Landing page institucional para uma creche, com apresentação da unidade, informações para matrícula e formulário de contato. Design responsivo, focado em clareza e facilidade de uso para pais e responsáveis.</p>
+      <div class="project-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">Responsivo</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/KauaDaudt" target="_blank" class="project-card fade-up">
+      <svg class="project-arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      <div class="project-badge">Projeto pessoal</div>
+      <div class="project-num">003</div>
+      <div class="project-title">WhatsApp AI Chatbot</div>
+      <p class="project-desc">Chatbot inteligente para WhatsApp desenvolvido do zero. Integra Evolution API, LLM Groq (LLaMA 3.3) e histórico de conversas em SQLite. Deploy completo via Docker Desktop, com respostas automáticas sobre dúvidas de negócio e disponibilidade.</p>
+      <div class="project-tags">
+        <span class="tag">C#</span>
+        <span class="tag">ASP.NET Core</span>
+        <span class="tag">Docker</span>
+        <span class="tag">SQLite</span>
+        <span class="tag">Groq API</span>
+        <span class="tag">Evolution API</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/KauaDaudt" target="_blank" class="project-card fade-up">
+      <svg class="project-arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      <div class="project-badge">Projeto pessoal</div>
+      <div class="project-num">004</div>
+      <div class="project-title">API REST com .
+>>>>>>> 6a6b9cb (feat: reposiciona portfolio como fullstack)
